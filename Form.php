@@ -55,12 +55,13 @@ class Form {
 	 *
 	 * @param string $name The name of the form.
 	 * @param callable $handler Callback function that handles processing of the form.
-	 * @param string $method The method of the form. Allowed values are 'GET' or 'POST'.
 	 * @param array $attributes The attributes for the form. Only used during render.
 	 */
-	public function __construct( $name, callable $handler, $method = 'GET', array $attributes = [] ) {
+	public function __construct( $name, callable $handler, array $attributes = [] ) {
 		$this->name = $name;
-		$this->_set_method( $method );
+		$this->handler = $handler;
+		$this->attributes = $attributes;
+		$this->_set_method( ( isset( $attributes['method'] ) ? $attributes['method'] : 'GET' ) );
 		$this->_set_fields( new FieldContainer() );
 	}
 
@@ -69,7 +70,7 @@ class Form {
 	 */
 	public function process() {
 		$this->setFieldValues();
-		call_user_func( $this->handler );
+		call_user_func( $this->handler, $this );
 	}
 
 	/**
@@ -162,10 +163,14 @@ class Form {
 	 * @param FieldContainer $fields
 	 */
 	protected function _set_fields( FieldContainer $fields ) {
-		$fields->addField( new InputField( 'form', [
-			'type'  => 'hidden',
-			'value' => $this->name,
-		] ) );
+		$fields->addField(
+			new InputField( 'form', [
+				'type' => 'hidden',
+				'atts' => [
+					'value' => $this->name,
+				]
+			] )
+		);
 		$this->fields = $fields;
 	}
 
@@ -180,7 +185,7 @@ class Form {
 		if ( ! in_array( $value, $allowed_methods ) ) {
 			throw new \InvalidArgumentException( 'Invalid form method' );
 		}
-		$this->method = $value;
+		$this->method = $this->attributes['method'] = $value;
 	}
 
 	/**
