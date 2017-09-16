@@ -162,7 +162,7 @@ class Form {
 	 * @param FieldContainer $fields
 	 */
 	protected function _set_fields( FieldContainer $fields ) {
-		$fields->addField( new InputField( 'form', '', [
+		$fields->addField( new InputField( 'form', [
 			'type'  => 'hidden',
 			'value' => $this->name,
 		] ) );
