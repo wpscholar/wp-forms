@@ -15,7 +15,7 @@
     }
   },
   "require": {
-    "wpscholar/elements": "~1.0.1",
-    "wpscholar/wp-fields": "~1.0"
+    "wpscholar/elements": "~1.0.2",
+    "wpscholar/wp-fields": "~2.0"
   }
 }
