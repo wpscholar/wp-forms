@@ -53,6 +53,17 @@ class FormContainer implements \IteratorAggregate {
 	}
 
 	/**
+	 * Add multiple forms to the container
+	 *
+	 * @param Form[] $forms
+	 */
+	public function addForms( array $forms ) {
+		foreach ( $forms as $form ) {
+			$this->addForm( $form );
+		}
+	}
+
+	/**
 	 * Remove a form from the container by name.
 	 *
 	 * @param string $name
@@ -61,6 +72,13 @@ class FormContainer implements \IteratorAggregate {
 		if ( $this->hasForm( $name ) ) {
 			unset( $this->_forms[ $name ] );
 		}
+	}
+
+	/**
+	 * Remove all forms from the container.
+	 */
+	public function removeAllForms() {
+		$this->_forms = [];
 	}
 
 	/**
