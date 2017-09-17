@@ -37,13 +37,6 @@ class Form {
 	protected $handler;
 
 	/**
-	 * The form method.
-	 *
-	 * @var string
-	 */
-	protected $method;
-
-	/**
 	 * The form name.
 	 *
 	 * @var string
@@ -77,9 +70,7 @@ class Form {
 	 * Render the form.
 	 */
 	public function render() {
-		$atts = $this->attributes;
-		$atts['method'] = $this->method;
-		$form = new EnclosingElement( 'form', $atts );
+		$form = new EnclosingElement( 'form', $this->attributes );
 		foreach ( $this->fields as $field ) {
 			/**
 			 * @var Field $field
@@ -145,7 +136,7 @@ class Form {
 	 * @return string
 	 */
 	protected function _get_method() {
-		return $this->method;
+		return isset( $this->attributes['method'] ) ? $this->attributes['method'] : 'GET';
 	}
 
 	/**
@@ -185,7 +176,7 @@ class Form {
 		if ( ! in_array( $value, $allowed_methods ) ) {
 			throw new \InvalidArgumentException( 'Invalid form method' );
 		}
-		$this->method = $this->attributes['method'] = $value;
+		$this->attributes['method'] = $value;
 	}
 
 	/**
