@@ -108,7 +108,7 @@ class Form {
 	 * @return string
 	 */
 	protected function _get_fields() {
-		return $this->fields;
+		return $this->_fields;
 	}
 
 	/**
