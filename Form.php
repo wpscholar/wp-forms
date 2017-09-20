@@ -2,9 +2,6 @@
 
 namespace wpscholar\WordPress;
 
-use wpscholar\Elements\EnclosingElement;
-use wpscholar\Elements\TextNode;
-
 /**
  * Class Form
  *
@@ -20,28 +17,28 @@ class Form {
 	/**
 	 * @var array The form attributes.
 	 */
-	protected $attributes;
+	protected $_atts;
 
 	/**
 	 * Reference to field container.
 	 *
 	 * @var FieldContainer
 	 */
-	protected $fields;
+	protected $_fields;
 
 	/**
 	 * Reference to form handler callback function.
 	 *
 	 * @var callable
 	 */
-	protected $handler;
+	protected $_handler;
 
 	/**
 	 * The form name.
 	 *
 	 * @var string
 	 */
-	protected $name;
+	protected $_name;
 
 	/**
 	 * Form constructor.
@@ -51,9 +48,9 @@ class Form {
 	 * @param array $attributes The attributes for the form. Only used during render.
 	 */
 	public function __construct( $name, callable $handler, array $attributes = [] ) {
-		$this->name = $name;
-		$this->handler = $handler;
-		$this->attributes = $attributes;
+		$this->_name = $name;
+		$this->_handler = $handler;
+		$this->_atts = $attributes;
 		$this->_set_method( ( isset( $attributes['method'] ) ? $attributes['method'] : 'GET' ) );
 		$this->_set_fields( new FieldContainer() );
 	}
@@ -62,22 +59,15 @@ class Form {
 	 * Process the form.
 	 */
 	public function process() {
-		$this->setFieldValues();
-		call_user_func( $this->handler, $this );
+		$this->_setFieldValues();
+		call_user_func( $this->_handler, $this );
 	}
 
 	/**
 	 * Render the form.
 	 */
 	public function render() {
-		$form = new EnclosingElement( 'form', $this->attributes );
-		foreach ( $this->fields as $field ) {
-			/**
-			 * @var Field $field
-			 */
-			$form->append( new TextNode( $field->__toString() ) );
-		}
-		echo $form;
+		echo $this->__toString();
 	}
 
 	/**
@@ -86,13 +76,13 @@ class Form {
 	 * @return bool
 	 */
 	public function shouldHandle() {
-		return $this->name === filter_input( constant( 'INPUT_' . $this->method ), 'form' );
+		return $this->_name === filter_input( constant( 'INPUT_' . $this->method ), 'form' );
 	}
 
 	/**
 	 * Set field values from form submission.
 	 */
-	protected function setFieldValues() {
+	protected function _setFieldValues() {
 		foreach ( $this->fields as $field ) {
 			/**
 			 * @var Field $field
@@ -127,7 +117,7 @@ class Form {
 	 * @return string
 	 */
 	protected function _get_handler() {
-		return $this->handler;
+		return $this->_handler;
 	}
 
 	/**
@@ -136,7 +126,7 @@ class Form {
 	 * @return string
 	 */
 	protected function _get_method() {
-		return isset( $this->attributes['method'] ) ? $this->attributes['method'] : 'GET';
+		return isset( $this->_atts['method'] ) ? $this->atts['method'] : 'GET';
 	}
 
 	/**
@@ -145,7 +135,7 @@ class Form {
 	 * @return string
 	 */
 	protected function _get_name() {
-		return $this->name;
+		return $this->_name;
 	}
 
 	/**
@@ -158,11 +148,11 @@ class Form {
 			new InputField( 'form', [
 				'type' => 'hidden',
 				'atts' => [
-					'value' => $this->name,
+					'value' => $this->_name,
 				]
 			] )
 		);
-		$this->fields = $fields;
+		$this->_fields = $fields;
 	}
 
 	/**
@@ -176,7 +166,7 @@ class Form {
 		if ( ! in_array( $value, $allowed_methods ) ) {
 			throw new \InvalidArgumentException( 'Invalid form method' );
 		}
-		$this->attributes['method'] = $value;
+		$this->_atts['method'] = $value;
 	}
 
 	/**
@@ -207,6 +197,21 @@ class Form {
 		if ( method_exists( $this, $method ) && is_callable( [ $this, $method ] ) ) {
 			$this->$method( $value );
 		}
+	}
+
+	/**
+	 * Return form as string
+	 *
+	 * @return string
+	 */
+	public function __toString() {
+
+		$templateHandler = FormTemplateHandler::getInstance();
+
+		return $templateHandler->asString( 'form.twig', [
+			'atts'    => $this->_atts,
+			'content' => $this->fields->__toString(),
+		] );
 	}
 
 

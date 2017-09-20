@@ -16,13 +16,13 @@ class FormHandler {
 	 *
 	 * @var FormContainer
 	 */
-	protected $forms;
+	protected $_forms;
 
 	/**
 	 * FormHandler constructor.
 	 */
 	public function __construct() {
-		$this->forms = new FormContainer();
+		$this->_forms = new FormContainer();
 	}
 
 	/**
@@ -30,7 +30,7 @@ class FormHandler {
 	 */
 	public function maybeProcessForms() {
 		if ( isset( $_GET['form'] ) || isset( $_POST['form'] ) ) {
-			foreach ( $this->forms as $form ) {
+			foreach ( $this->_forms as $form ) {
 				/**
 				 * @var Form $form
 				 */
@@ -47,7 +47,7 @@ class FormHandler {
 	 * @return FormContainer
 	 */
 	protected function _get_forms() {
-		return $this->forms;
+		return $this->_forms;
 	}
 
 	/**
