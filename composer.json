@@ -16,6 +16,6 @@
   },
   "require": {
     "twig/twig": "^1.34",
-    "wpscholar/wp-fields": "@dev"
+    "wpscholar/wp-fields": "~3.0"
   }
 }
