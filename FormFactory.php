@@ -13,15 +13,14 @@ class FormFactory {
 	 * Factory for generating a field
 	 *
 	 * @param string $name
-	 * @param callable $handler
 	 * @param array $args
 	 *
 	 * @return Form
 	 */
-	public static function create( $name, callable $handler, array $args ) {
+	public static function create( $name, array $args ) {
 
 		$formAtts = isset( $args['atts'] ) ? $args['atts'] : [];
-		$form = new Form( $name, $handler, $formAtts );
+		$form     = new Form( $name, $formAtts );
 
 		$fields = isset( $args['fields'] ) && is_array( $args['fields'] ) ? $args['fields'] : [];
 
