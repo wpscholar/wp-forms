@@ -19,6 +19,18 @@ class FormHandler {
 	protected $_forms;
 
 	/**
+	 * Initialize a new form handler instance
+	 *
+	 * @return FormHandler
+	 */
+	public static function initialize() {
+		$instance = new self();
+		add_action( 'template_redirect', [ $instance, 'maybeProcessForms' ] );
+
+		return $instance;
+	}
+
+	/**
 	 * FormHandler constructor.
 	 */
 	public function __construct() {
