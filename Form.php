@@ -15,6 +15,13 @@ namespace wpscholar\WordPress;
 class Form {
 
 	/**
+	 * The form name.
+	 *
+	 * @var string
+	 */
+	protected $_name;
+
+	/**
 	 * @var array The form attributes.
 	 */
 	protected $_atts;
@@ -27,29 +34,13 @@ class Form {
 	protected $_fields;
 
 	/**
-	 * Reference to form handler callback function.
-	 *
-	 * @var callable
-	 */
-	protected $_handler;
-
-	/**
-	 * The form name.
-	 *
-	 * @var string
-	 */
-	protected $_name;
-
-	/**
 	 * Form constructor.
 	 *
 	 * @param string $name The name of the form.
-	 * @param callable $handler Callback function that handles processing of the form.
 	 * @param array $attributes The attributes for the form. Only used during render.
 	 */
-	public function __construct( $name, callable $handler, array $attributes = [] ) {
+	public function __construct( $name, array $attributes = [] ) {
 		$this->_name = $name;
-		$this->_handler = $handler;
 		$this->_atts = $attributes;
 		$this->_set_method( ( isset( $attributes['method'] ) ? $attributes['method'] : 'GET' ) );
 		$this->_set_fields( new FieldContainer() );
@@ -60,7 +51,16 @@ class Form {
 	 */
 	public function process() {
 		$this->_setFieldValues();
-		call_user_func( $this->_handler, $this );
+		do_action( __METHOD__, $this );
+	}
+
+	/**
+	 * Register a form handler
+	 *
+	 * @param callable $callback
+	 */
+	public function registerHandler( callable $callback ) {
+		add_action( __CLASS__ . '::' . 'process', $callback );
 	}
 
 	/**
