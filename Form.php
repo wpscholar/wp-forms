@@ -147,9 +147,7 @@ class Form {
 		$fields->addField(
 			new InputField( 'form', [
 				'type' => 'hidden',
-				'atts' => [
-					'value' => $this->_name,
-				]
+				'value' => $this->_name,
 			] )
 		);
 		$this->_fields = $fields;
