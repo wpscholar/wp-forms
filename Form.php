@@ -126,7 +126,7 @@ class Form {
 	 * @return string
 	 */
 	protected function _get_method() {
-		return isset( $this->_atts['method'] ) ? $this->atts['method'] : 'GET';
+		return isset( $this->_atts['method'] ) ? $this->_atts['method'] : 'GET';
 	}
 
 	/**
